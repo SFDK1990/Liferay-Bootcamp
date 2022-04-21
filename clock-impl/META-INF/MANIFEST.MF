@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Clock Impl
+Bundle-SymbolicName: com.liferay.training.clock.implm
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: com.liferay.training.clock.implm
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: com.liferay.training.clock.api
