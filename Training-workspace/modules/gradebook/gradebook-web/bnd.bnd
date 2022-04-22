@@ -1,0 +1,4 @@
+Bundle-Name: gradebook-web
+Bundle-SymbolicName: com.liefray.training.gradebook.web
+Bundle-Version: 1.0.0
+Export-Package: com.liefray.training.gradebook.web.constants
