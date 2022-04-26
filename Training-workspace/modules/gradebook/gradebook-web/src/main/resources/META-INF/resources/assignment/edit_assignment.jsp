@@ -1,64 +1,90 @@
- <%@ include file="/init.jsp"%>
 
- <%-- Generate add / edit action URL and set title. --%>
+<%@ include file="../init.jsp"%>
 
- <c:choose>
-     <c:when test="${not empty assignment}">
-         <portlet:actionURL var="assignmentActionURL" name="<%=MVCCommandNames.EDIT_ASSIGNMENT %>">
-             <portlet:param name="redirect" value="${param.redirect}" />
-         </portlet:actionURL>
+<liferay-ui:error key="serviceErrorDetails">
+	<liferay-ui:message key="error.assignment-service-error"
+		arguments='<%=SessionErrors.get(liferayPortletRequest, "serviceErrorDetails")%>' />
+</liferay-ui:error>
+<liferay-ui:error key="assignmentTitleEmpty"
+	message="error.assignment-title-empty" />
+<liferay-ui:error key="assignmentDescriptionEmpty"
+	message="error.assignment-description-empty" />
 
-         <c:set var="editTitle" value="edit-assignment"/>
-     </c:when>
-     <c:otherwise>
-         <portlet:actionURL var="assignmentActionURL" name="<%=MVCCommandNames.ADD_ASSIGNMENT %>">
-             <portlet:param name="redirect" value="${param.redirect}" />
-         </portlet:actionURL>
+<%-- Generate add / edit action URL and set title. --%>
 
-         <c:set var="editTitle" value="add-assignment"/>
-     </c:otherwise>
- </c:choose>
+<c:choose>
+	<c:when test="${not empty assignment}">
+		<portlet:actionURL var="assignmentActionURL"
+			name="<%=MVCCommandNames.EDIT_ASSIGNMENT%>">
+			<portlet:param name="redirect" value="${param.redirect}" />
+		</portlet:actionURL>
 
- <div class="container-fluid-1280 edit-assignment">
+		<c:set var="editTitle" value="edit-assignment" />
+	</c:when>
+	<c:otherwise>
+		<portlet:actionURL var="assignmentActionURL"
+			name="<%=MVCCommandNames.ADD_ASSIGNMENT%>">
+			<portlet:param name="redirect" value="${param.redirect}" />
+		</portlet:actionURL>
 
-     <h1><liferay-ui:message key="${editTitle}" /></h1>
+		<c:set var="editTitle" value="add-assignment" />
+	</c:otherwise>
+</c:choose>
 
-     <aui:model-context bean="${assignment}" model="${assignmentClass}" />
+<div class="container-fluid-1280 edit-assignment">
 
-     <aui:form action="${assignmentActionURL}" name="fm">
+	<h1>
+		<liferay-ui:message key="${editTitle}" />
+	</h1>
 
-         <aui:input name="assignmentId" field="assignmentId" type="hidden" />
+	<aui:model-context bean="${assignment}" model="${assignmentClass}" />
 
-         <aui:fieldset-group markupView="lexicon">
+	<aui:form action="${assignmentActionURL}" name="fm">
 
-             <aui:fieldset>
+		<aui:input name="assignmentId" field="assignmentId" type="hidden" />
 
-                 <%-- Title field. --%>
+		<aui:fieldset-group markupView="lexicon">
 
-                 <aui:input name="title">
+			<aui:fieldset>
 
-                 </aui:input>
+				<%-- Title field. --%>
 
-                 <%-- Description field. --%>
+				<aui:input name="title">
+				
+				 <aui:validator name="required" />
 
-                 <aui:input name="description">
-                     <aui:validator name="required" />
-                 </aui:input>
+				 <aui:validator errorMessage="error.assignment-title-format" name="custom">
+				     function(val, fieldNode, ruleValue) {
+				         var wordExpression = 
+				             new RegExp("^[^\\[\\]\\^$<>]*$");
+				
+				         return wordExpression.test(val);
+				     }
+				 </aui:validator>
 
-                 <%-- Due date field. --%>
+				</aui:input>
 
-                 <aui:input name="dueDate">
-                     <aui:validator name="required" />
-                 </aui:input>
-             </aui:fieldset>
-         </aui:fieldset-group>
+				<%-- Description field. --%>
 
-         <%--Buttons. --%>
+				<aui:input name="description">
+					<aui:validator name="required" />
+				</aui:input>
 
-         <aui:button-row>
-             <aui:button cssClass="btn btn-primary" type="submit" />
-             <aui:button cssClass="btn btn-secondary" onClick="${param.redirect}" type="cancel" />
-         </aui:button-row>
-     </aui:form>
+				<%-- Due date field. --%>
 
- </div>
+				<aui:input name="dueDate">
+					<aui:validator name="required" />
+				</aui:input>
+			</aui:fieldset>
+		</aui:fieldset-group>
+
+		<%--Buttons. --%>
+
+		<aui:button-row>
+			<aui:button cssClass="btn btn-primary" type="submit" />
+			<aui:button cssClass="btn btn-secondary" onClick="${param.redirect}"
+				type="cancel" />
+		</aui:button-row>
+	</aui:form>
+
+</div>

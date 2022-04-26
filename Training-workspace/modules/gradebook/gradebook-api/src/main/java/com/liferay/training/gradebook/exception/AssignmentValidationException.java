@@ -13,9 +13,11 @@
  */
 package com.liferay.training.gradebook.exception;
 
-import org.osgi.annotation.versioning.ProviderType;
-
 import com.liferay.portal.kernel.exception.PortalException;
+
+import java.util.List;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
@@ -23,6 +25,24 @@ import com.liferay.portal.kernel.exception.PortalException;
 @ProviderType
 public class AssignmentValidationException extends PortalException {
 
+	/**
+	  * Custom constructor taking a list as a parameter.
+	  * 
+	  * @param errors
+	  */
+	 public AssignmentValidationException(List<String> errors) {
+
+	     super(String.join(",", errors));
+	     _errors = errors;
+	 }
+
+	 public List<String> getErrors() {
+
+	     return _errors;
+	 }
+
+	 private List<String> _errors;
+	
 	public AssignmentValidationException() {
 	}
 
