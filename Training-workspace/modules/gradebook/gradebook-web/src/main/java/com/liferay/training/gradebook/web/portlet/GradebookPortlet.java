@@ -15,6 +15,7 @@ import org.osgi.service.component.annotations.Component;
 	property = {
 		"com.liferay.portlet.display-category=category.sample",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
+		"com.liferay.portlet.css-class-wrapper=gradebook-portlet",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=Gradebook",
 		"javax.portlet.init-param.template-path=/",
