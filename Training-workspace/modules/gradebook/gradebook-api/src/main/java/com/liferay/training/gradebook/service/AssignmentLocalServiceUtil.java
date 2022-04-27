@@ -80,10 +80,12 @@ public class AssignmentLocalServiceUtil {
 	 *
 	 * @param assignment the assignment
 	 * @return the assignment that was removed
+	 * @throws PortalException
 	 */
 	public static com.liferay.training.gradebook.model.Assignment
-		deleteAssignment(
-			com.liferay.training.gradebook.model.Assignment assignment) {
+			deleteAssignment(
+				com.liferay.training.gradebook.model.Assignment assignment)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().deleteAssignment(assignment);
 	}
@@ -204,6 +206,19 @@ public class AssignmentLocalServiceUtil {
 		return getService().fetchAssignment(assignmentId);
 	}
 
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment, or <code>null</code> if a matching assignment could not be found
+	 */
+	public static com.liferay.training.gradebook.model.Assignment
+		fetchAssignmentByUuidAndGroupId(String uuid, long groupId) {
+
+		return getService().fetchAssignmentByUuidAndGroupId(uuid, groupId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
@@ -222,6 +237,21 @@ public class AssignmentLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getAssignment(assignmentId);
+	}
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment
+	 * @throws PortalException if a matching assignment could not be found
+	 */
+	public static com.liferay.training.gradebook.model.Assignment
+			getAssignmentByUuidAndGroupId(String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().getAssignmentByUuidAndGroupId(uuid, groupId);
 	}
 
 	/**
@@ -281,6 +311,42 @@ public class AssignmentLocalServiceUtil {
 	}
 
 	/**
+	 * Returns all the assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @return the matching assignments, or an empty list if no matches were found
+	 */
+	public static java.util.List
+		<com.liferay.training.gradebook.model.Assignment>
+			getAssignmentsByUuidAndCompanyId(String uuid, long companyId) {
+
+		return getService().getAssignmentsByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of assignments
+	 * @param end the upper bound of the range of assignments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching assignments, or an empty list if no matches were found
+	 */
+	public static java.util.List
+		<com.liferay.training.gradebook.model.Assignment>
+			getAssignmentsByUuidAndCompanyId(
+				String uuid, long companyId, int start, int end,
+				com.liferay.portal.kernel.util.OrderByComparator
+					<com.liferay.training.gradebook.model.Assignment>
+						orderByComparator) {
+
+		return getService().getAssignmentsByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of assignments.
 	 *
 	 * @return the number of assignments
@@ -293,6 +359,14 @@ public class AssignmentLocalServiceUtil {
 		long groupId, String keywords) {
 
 		return getService().getAssignmentsCountByKeywords(groupId, keywords);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return getService().getExportActionableDynamicQuery(portletDataContext);
 	}
 
 	public static

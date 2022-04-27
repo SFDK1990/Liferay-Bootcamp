@@ -2,6 +2,7 @@
 
 <model-hints>
 	<model name="com.liferay.training.gradebook.model.Assignment">
+		<field name="uuid" type="String" />
 		<field name="assignmentId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
@@ -12,5 +13,9 @@
 		<field localized="true" name="title" type="String" />
 		<field localized="true" name="description" type="String" />
 		<field name="dueDate" type="Date" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
 	</model>
 </model-hints>

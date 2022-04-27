@@ -64,9 +64,11 @@ public class AssignmentCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(31);
 
-		sb.append("{assignmentId=");
+		sb.append("{uuid=");
+		sb.append(uuid);
+		sb.append(", assignmentId=");
 		sb.append(assignmentId);
 		sb.append(", groupId=");
 		sb.append(groupId);
@@ -86,6 +88,14 @@ public class AssignmentCacheModel
 		sb.append(description);
 		sb.append(", dueDate=");
 		sb.append(dueDate);
+		sb.append(", status=");
+		sb.append(status);
+		sb.append(", statusByUserId=");
+		sb.append(statusByUserId);
+		sb.append(", statusByUserName=");
+		sb.append(statusByUserName);
+		sb.append(", statusDate=");
+		sb.append(statusDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -94,6 +104,13 @@ public class AssignmentCacheModel
 	@Override
 	public Assignment toEntityModel() {
 		AssignmentImpl assignmentImpl = new AssignmentImpl();
+
+		if (uuid == null) {
+			assignmentImpl.setUuid("");
+		}
+		else {
+			assignmentImpl.setUuid(uuid);
+		}
 
 		assignmentImpl.setAssignmentId(assignmentId);
 		assignmentImpl.setGroupId(groupId);
@@ -142,6 +159,23 @@ public class AssignmentCacheModel
 			assignmentImpl.setDueDate(new Date(dueDate));
 		}
 
+		assignmentImpl.setStatus(status);
+		assignmentImpl.setStatusByUserId(statusByUserId);
+
+		if (statusByUserName == null) {
+			assignmentImpl.setStatusByUserName("");
+		}
+		else {
+			assignmentImpl.setStatusByUserName(statusByUserName);
+		}
+
+		if (statusDate == Long.MIN_VALUE) {
+			assignmentImpl.setStatusDate(null);
+		}
+		else {
+			assignmentImpl.setStatusDate(new Date(statusDate));
+		}
+
 		assignmentImpl.resetOriginalValues();
 
 		return assignmentImpl;
@@ -149,6 +183,8 @@ public class AssignmentCacheModel
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
+		uuid = objectInput.readUTF();
+
 		assignmentId = objectInput.readLong();
 
 		groupId = objectInput.readLong();
@@ -162,10 +198,23 @@ public class AssignmentCacheModel
 		title = objectInput.readUTF();
 		description = objectInput.readUTF();
 		dueDate = objectInput.readLong();
+
+		status = objectInput.readInt();
+
+		statusByUserId = objectInput.readLong();
+		statusByUserName = objectInput.readUTF();
+		statusDate = objectInput.readLong();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
+		if (uuid == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(uuid);
+		}
+
 		objectOutput.writeLong(assignmentId);
 
 		objectOutput.writeLong(groupId);
@@ -199,8 +248,22 @@ public class AssignmentCacheModel
 		}
 
 		objectOutput.writeLong(dueDate);
+
+		objectOutput.writeInt(status);
+
+		objectOutput.writeLong(statusByUserId);
+
+		if (statusByUserName == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(statusByUserName);
+		}
+
+		objectOutput.writeLong(statusDate);
 	}
 
+	public String uuid;
 	public long assignmentId;
 	public long groupId;
 	public long companyId;
@@ -211,5 +274,9 @@ public class AssignmentCacheModel
 	public String title;
 	public String description;
 	public long dueDate;
+	public int status;
+	public long statusByUserId;
+	public String statusByUserName;
+	public long statusDate;
 
 }

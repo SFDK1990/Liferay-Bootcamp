@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.LocalizedModel;
 import com.liferay.portal.kernel.model.ShardedModel;
+import com.liferay.portal.kernel.model.StagedAuditedModel;
+import com.liferay.portal.kernel.model.WorkflowedModel;
 
 import java.util.Date;
 import java.util.Locale;
@@ -40,7 +42,8 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface AssignmentModel
-	extends BaseModel<Assignment>, GroupedModel, LocalizedModel, ShardedModel {
+	extends BaseModel<Assignment>, GroupedModel, LocalizedModel, ShardedModel,
+			StagedAuditedModel, WorkflowedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -61,6 +64,23 @@ public interface AssignmentModel
 	 * @param primaryKey the primary key of this assignment
 	 */
 	public void setPrimaryKey(long primaryKey);
+
+	/**
+	 * Returns the uuid of this assignment.
+	 *
+	 * @return the uuid of this assignment
+	 */
+	@AutoEscape
+	@Override
+	public String getUuid();
+
+	/**
+	 * Sets the uuid of this assignment.
+	 *
+	 * @param uuid the uuid of this assignment
+	 */
+	@Override
+	public void setUuid(String uuid);
 
 	/**
 	 * Returns the assignment ID of this assignment.
@@ -402,6 +422,151 @@ public interface AssignmentModel
 	 * @param dueDate the due date of this assignment
 	 */
 	public void setDueDate(Date dueDate);
+
+	/**
+	 * Returns the status of this assignment.
+	 *
+	 * @return the status of this assignment
+	 */
+	@Override
+	public int getStatus();
+
+	/**
+	 * Sets the status of this assignment.
+	 *
+	 * @param status the status of this assignment
+	 */
+	@Override
+	public void setStatus(int status);
+
+	/**
+	 * Returns the status by user ID of this assignment.
+	 *
+	 * @return the status by user ID of this assignment
+	 */
+	@Override
+	public long getStatusByUserId();
+
+	/**
+	 * Sets the status by user ID of this assignment.
+	 *
+	 * @param statusByUserId the status by user ID of this assignment
+	 */
+	@Override
+	public void setStatusByUserId(long statusByUserId);
+
+	/**
+	 * Returns the status by user uuid of this assignment.
+	 *
+	 * @return the status by user uuid of this assignment
+	 */
+	@Override
+	public String getStatusByUserUuid();
+
+	/**
+	 * Sets the status by user uuid of this assignment.
+	 *
+	 * @param statusByUserUuid the status by user uuid of this assignment
+	 */
+	@Override
+	public void setStatusByUserUuid(String statusByUserUuid);
+
+	/**
+	 * Returns the status by user name of this assignment.
+	 *
+	 * @return the status by user name of this assignment
+	 */
+	@AutoEscape
+	@Override
+	public String getStatusByUserName();
+
+	/**
+	 * Sets the status by user name of this assignment.
+	 *
+	 * @param statusByUserName the status by user name of this assignment
+	 */
+	@Override
+	public void setStatusByUserName(String statusByUserName);
+
+	/**
+	 * Returns the status date of this assignment.
+	 *
+	 * @return the status date of this assignment
+	 */
+	@Override
+	public Date getStatusDate();
+
+	/**
+	 * Sets the status date of this assignment.
+	 *
+	 * @param statusDate the status date of this assignment
+	 */
+	@Override
+	public void setStatusDate(Date statusDate);
+
+	/**
+	 * Returns <code>true</code> if this assignment is approved.
+	 *
+	 * @return <code>true</code> if this assignment is approved; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isApproved();
+
+	/**
+	 * Returns <code>true</code> if this assignment is denied.
+	 *
+	 * @return <code>true</code> if this assignment is denied; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDenied();
+
+	/**
+	 * Returns <code>true</code> if this assignment is a draft.
+	 *
+	 * @return <code>true</code> if this assignment is a draft; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isDraft();
+
+	/**
+	 * Returns <code>true</code> if this assignment is expired.
+	 *
+	 * @return <code>true</code> if this assignment is expired; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isExpired();
+
+	/**
+	 * Returns <code>true</code> if this assignment is inactive.
+	 *
+	 * @return <code>true</code> if this assignment is inactive; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInactive();
+
+	/**
+	 * Returns <code>true</code> if this assignment is incomplete.
+	 *
+	 * @return <code>true</code> if this assignment is incomplete; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isIncomplete();
+
+	/**
+	 * Returns <code>true</code> if this assignment is pending.
+	 *
+	 * @return <code>true</code> if this assignment is pending; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isPending();
+
+	/**
+	 * Returns <code>true</code> if this assignment is scheduled.
+	 *
+	 * @return <code>true</code> if this assignment is scheduled; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isScheduled();
 
 	@Override
 	public String[] getAvailableLanguageIds();

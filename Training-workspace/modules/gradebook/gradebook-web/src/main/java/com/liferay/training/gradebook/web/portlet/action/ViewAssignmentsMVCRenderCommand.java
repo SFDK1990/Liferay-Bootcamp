@@ -53,6 +53,8 @@ package com.liferay.training.gradebook.web.portlet.action;
          // Add Clay management toolbar related attributes.
 
          addManagementToolbarAttributes(renderRequest, renderResponse);
+         
+         renderRequest.setAttribute("assignmentPermission", _assignmentPermission);
 
          return "/view.jsp";
      }
@@ -148,4 +150,7 @@ package com.liferay.training.gradebook.web.portlet.action;
 
      @Reference
      private Portal _portal;
+     
+     @Reference
+     protected AssignmentService _assignmentPermission;
  }

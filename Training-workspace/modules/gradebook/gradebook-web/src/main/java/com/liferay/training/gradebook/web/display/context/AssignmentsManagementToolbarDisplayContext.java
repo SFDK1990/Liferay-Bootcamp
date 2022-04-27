@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.training.gradebook.web.constants.GradebookPortletKeys;
 import com.liferay.training.gradebook.web.constants.MVCCommandNames;
+import com.liferay.training.gradebook.web.internal.security.permission.resource.AssignmentTopLevelPermission;
 
 import java.util.List;
 
@@ -27,237 +28,210 @@ import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
 /**
-    * Assigments management toolbar display context.
-    *
-    * This class passes contextual information to the user interface
-    * for the Clay management toolbar.
-    *
-    * @author liferay
-    */
-public class AssignmentsManagementToolbarDisplayContext
-    extends BaseManagementToolbarDisplayContext {
+ * Assigments management toolbar display context.
+ *
+ * This class passes contextual information to the user interface for the Clay
+ * management toolbar.
+ *
+ * @author liferay
+ */
+public class AssignmentsManagementToolbarDisplayContext extends BaseManagementToolbarDisplayContext {
 
-    public AssignmentsManagementToolbarDisplayContext(
-        LiferayPortletRequest liferayPortletRequest,
-        LiferayPortletResponse liferayPortletResponse,
-        HttpServletRequest httpServletRequest) {
+	public AssignmentsManagementToolbarDisplayContext(LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse, HttpServletRequest httpServletRequest) {
 
-        super(
-            liferayPortletRequest, liferayPortletResponse, httpServletRequest);
+		super(liferayPortletRequest, liferayPortletResponse, httpServletRequest);
 
-        _portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(
-                liferayPortletRequest);
+		_portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(liferayPortletRequest);
 
-        _themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
-            WebKeys.THEME_DISPLAY);
-    }
+		_themeDisplay = (ThemeDisplay) httpServletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+	}
 
-    /**
-        * Returns the creation menu for the toolbar
-        * (plus sign on the management toolbar).
-        *
-        * @return creation menu
-        */
-    public CreationMenu getCreationMenu() {
+	/**
+	 * Returns the creation menu for the toolbar (plus sign on the management
+	 * toolbar).
+	 *
+	 * @return creation menu
+	 */
+	public CreationMenu getCreationMenu() {
 
-        // Create the menu.
+		if (!AssignmentTopLevelPermission.contains(_themeDisplay.getPermissionChecker(),
+				_themeDisplay.getScopeGroupId(), "ADD_ENTRY")) {
 
-        return new CreationMenu() {
-            {
-                addDropdownItem(
-                    dropdownItem -> {
-                        dropdownItem.setHref(
-                            liferayPortletResponse.createRenderURL(),
-                            "mvcRenderCommandName", MVCCommandNames.EDIT_ASSIGNMENT,
-                            "redirect", currentURLObj.toString());
-                        dropdownItem.setLabel(
-                            LanguageUtil.get(request, "add-assignment"));
-                    });
-            }
-        };        
-    }
+			return null;
+		}
 
-    @Override
-    public String getClearResultsURL() {
-        return getSearchActionURL();
-    }
+		// Create the menu.
 
-    /**
-        * Returns the assignment list display style. 
-        * 
-        * Current selection is stored in portal preferences.
-        * 
-        * @return current display style
-        */
-    public String getDisplayStyle() {
+		return new CreationMenu() {
+			{
+				addDropdownItem(dropdownItem -> {
+					dropdownItem.setHref(liferayPortletResponse.createRenderURL(), "mvcRenderCommandName",
+							MVCCommandNames.EDIT_ASSIGNMENT, "redirect", currentURLObj.toString());
+					dropdownItem.setLabel(LanguageUtil.get(request, "add-assignment"));
+				});
+			}
+		};
+	}
 
-        String displayStyle = ParamUtil.getString(request, "displayStyle");
+	@Override
+	public String getClearResultsURL() {
+		return getSearchActionURL();
+	}
 
-        if (Validator.isNull(displayStyle)) {
-            displayStyle = _portalPreferences.getValue(
-                GradebookPortletKeys.GRADEBOOK, "assignments-display-style",
-                "descriptive");
-        }
-        else {
-            _portalPreferences.setValue(
-                GradebookPortletKeys.GRADEBOOK, "assignments-display-style",
-                displayStyle);
+	/**
+	 * Returns the assignment list display style.
+	 * 
+	 * Current selection is stored in portal preferences.
+	 * 
+	 * @return current display style
+	 */
+	public String getDisplayStyle() {
 
-            request.setAttribute(
-                WebKeys.SINGLE_PAGE_APPLICATION_CLEAR_CACHE, Boolean.TRUE);
-        }
+		String displayStyle = ParamUtil.getString(request, "displayStyle");
 
-        return displayStyle;
-    }
+		if (Validator.isNull(displayStyle)) {
+			displayStyle = _portalPreferences.getValue(GradebookPortletKeys.GRADEBOOK, "assignments-display-style",
+					"descriptive");
+		} else {
+			_portalPreferences.setValue(GradebookPortletKeys.GRADEBOOK, "assignments-display-style", displayStyle);
 
-    /**
-        * Returns the sort order column.
-        * 
-        * @return sort column
-        */
-    public String getOrderByCol() {
+			request.setAttribute(WebKeys.SINGLE_PAGE_APPLICATION_CLEAR_CACHE, Boolean.TRUE);
+		}
 
-        return ParamUtil.getString(request, "orderByCol", "title");
-    }
+		return displayStyle;
+	}
 
-    /**
-        * Returns the sort type (ascending / descending).
-        * 
-        * @return sort type
-        */
-    public String getOrderByType() {
+	/**
+	 * Returns the sort order column.
+	 * 
+	 * @return sort column
+	 */
+	public String getOrderByCol() {
 
-        return ParamUtil.getString(request, "orderByType", "asc");
-    }
+		return ParamUtil.getString(request, "orderByCol", "title");
+	}
 
-    /**
-        * Returns the action URL for the search.
-        *
-        * @return search action URL
-        */
-    @Override
-    public String getSearchActionURL() {
+	/**
+	 * Returns the sort type (ascending / descending).
+	 * 
+	 * @return sort type
+	 */
+	public String getOrderByType() {
 
-        PortletURL searchURL = liferayPortletResponse.createRenderURL();
+		return ParamUtil.getString(request, "orderByType", "asc");
+	}
 
-        searchURL.setProperty(
-            "mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
+	/**
+	 * Returns the action URL for the search.
+	 *
+	 * @return search action URL
+	 */
+	@Override
+	public String getSearchActionURL() {
 
-        String navigation = ParamUtil.getString(
-            request, "navigation", "entries");
-        searchURL.setParameter("navigation", navigation);        
+		PortletURL searchURL = liferayPortletResponse.createRenderURL();
 
-        searchURL.setParameter("orderByCol", getOrderByCol());
-        searchURL.setParameter("orderByType", getOrderByType());
+		searchURL.setProperty("mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
 
-        return searchURL.toString();
-    }
+		String navigation = ParamUtil.getString(request, "navigation", "entries");
+		searchURL.setParameter("navigation", navigation);
 
+		searchURL.setParameter("orderByCol", getOrderByCol());
+		searchURL.setParameter("orderByType", getOrderByType());
 
-    /**
-        * Returns the view type options (card, list, table).
-        *
-        * @return list of view types
-        */
-    @Override
-    public List<ViewTypeItem> getViewTypeItems() {
-        PortletURL portletURL = liferayPortletResponse.createRenderURL();
+		return searchURL.toString();
+	}
 
-        portletURL.setParameter(
-                "mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
+	/**
+	 * Returns the view type options (card, list, table).
+	 *
+	 * @return list of view types
+	 */
+	@Override
+	public List<ViewTypeItem> getViewTypeItems() {
+		PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
-        int delta =
-                ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM);
+		portletURL.setParameter("mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
 
-        if (delta > 0) {
-            portletURL.setParameter("delta", String.valueOf(delta));
-        }
+		int delta = ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM);
 
-        String orderByCol =
-            ParamUtil.getString(request, "orderByCol", "title");
-        String orderByType =
-            ParamUtil.getString(request, "orderByType", "asc");
+		if (delta > 0) {
+			portletURL.setParameter("delta", String.valueOf(delta));
+		}
 
-        portletURL.setParameter("orderByCol", orderByCol);
-        portletURL.setParameter("orderByType", orderByType);
+		String orderByCol = ParamUtil.getString(request, "orderByCol", "title");
+		String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
-        int cur =
-            ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
+		portletURL.setParameter("orderByCol", orderByCol);
+		portletURL.setParameter("orderByType", orderByType);
 
-        if (cur > 0) {
-            portletURL.setParameter("cur", String.valueOf(cur));
-        }
+		int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
-        return new ViewTypeItemList(portletURL, getDisplayStyle()) {
-            {
-                addCardViewTypeItem();
+		if (cur > 0) {
+			portletURL.setParameter("cur", String.valueOf(cur));
+		}
 
-                addListViewTypeItem();
+		return new ViewTypeItemList(portletURL, getDisplayStyle()) {
+			{
+				addCardViewTypeItem();
 
-                addTableViewTypeItem();
-            }
-        };
-    }
+				addListViewTypeItem();
 
-    /**
-        * Return the option items for the sort column menu.
-        *
-        * @return options list for the sort column menu
-        */
-    @Override
-    protected List<DropdownItem> getOrderByDropdownItems() {
-        return new DropdownItemList() {
-            {
-                add(
-                    dropdownItem -> {
-                        dropdownItem.setActive("title".equals(getOrderByCol()));
-                        dropdownItem.setHref(
-                            _getCurrentSortingURL(), "orderByCol", "title");
-                        dropdownItem.setLabel(
-                            LanguageUtil.get(request, "title"));
-                    });
+				addTableViewTypeItem();
+			}
+		};
+	}
 
-                add(
-                    dropdownItem -> {
-                        dropdownItem.setActive(
-                            "createDate".equals(getOrderByCol()));
-                        dropdownItem.setHref(
-                            _getCurrentSortingURL(), "orderByCol",
-                            "createDate");
-                        dropdownItem.setLabel(
-                            LanguageUtil.get(request, "create-date"));
-                    });
-            }
-        };
-    }
+	/**
+	 * Return the option items for the sort column menu.
+	 *
+	 * @return options list for the sort column menu
+	 */
+	@Override
+	protected List<DropdownItem> getOrderByDropdownItems() {
+		return new DropdownItemList() {
+			{
+				add(dropdownItem -> {
+					dropdownItem.setActive("title".equals(getOrderByCol()));
+					dropdownItem.setHref(_getCurrentSortingURL(), "orderByCol", "title");
+					dropdownItem.setLabel(LanguageUtil.get(request, "title"));
+				});
 
-    /**
-        * Returns the current sorting URL.
-        *
-        * @return current sorting portlet URL
-        *
-        * @throws PortletException
-        */
-    private PortletURL _getCurrentSortingURL() throws PortletException {
-        PortletURL sortingURL = PortletURLUtil.clone(
-            currentURLObj, liferayPortletResponse);
+				add(dropdownItem -> {
+					dropdownItem.setActive("createDate".equals(getOrderByCol()));
+					dropdownItem.setHref(_getCurrentSortingURL(), "orderByCol", "createDate");
+					dropdownItem.setLabel(LanguageUtil.get(request, "create-date"));
+				});
+			}
+		};
+	}
 
-        sortingURL.setParameter(
-            "mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
+	/**
+	 * Returns the current sorting URL.
+	 *
+	 * @return current sorting portlet URL
+	 *
+	 * @throws PortletException
+	 */
+	private PortletURL _getCurrentSortingURL() throws PortletException {
+		PortletURL sortingURL = PortletURLUtil.clone(currentURLObj, liferayPortletResponse);
 
-        // Reset current page.
+		sortingURL.setParameter("mvcRenderCommandName", MVCCommandNames.VIEW_ASSIGNMENTS);
 
-        sortingURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
+		// Reset current page.
 
-        String keywords = ParamUtil.getString(request, "keywords");
+		sortingURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 
-        if (Validator.isNotNull(keywords)) {
-            sortingURL.setParameter("keywords", keywords);
-        }
+		String keywords = ParamUtil.getString(request, "keywords");
 
-        return sortingURL;
-    }
+		if (Validator.isNotNull(keywords)) {
+			sortingURL.setParameter("keywords", keywords);
+		}
 
-    private final PortalPreferences _portalPreferences;    
-    private final ThemeDisplay _themeDisplay;
+		return sortingURL;
+	}
+
+	private final PortalPreferences _portalPreferences;
+	private final ThemeDisplay _themeDisplay;
 }

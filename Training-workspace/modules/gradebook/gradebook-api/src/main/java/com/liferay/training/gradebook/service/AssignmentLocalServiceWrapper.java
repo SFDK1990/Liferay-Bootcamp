@@ -78,10 +78,12 @@ public class AssignmentLocalServiceWrapper
 	 *
 	 * @param assignment the assignment
 	 * @return the assignment that was removed
+	 * @throws PortalException
 	 */
 	@Override
 	public com.liferay.training.gradebook.model.Assignment deleteAssignment(
-		com.liferay.training.gradebook.model.Assignment assignment) {
+			com.liferay.training.gradebook.model.Assignment assignment)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assignmentLocalService.deleteAssignment(assignment);
 	}
@@ -209,6 +211,21 @@ public class AssignmentLocalServiceWrapper
 		return _assignmentLocalService.fetchAssignment(assignmentId);
 	}
 
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment, or <code>null</code> if a matching assignment could not be found
+	 */
+	@Override
+	public com.liferay.training.gradebook.model.Assignment
+		fetchAssignmentByUuidAndGroupId(String uuid, long groupId) {
+
+		return _assignmentLocalService.fetchAssignmentByUuidAndGroupId(
+			uuid, groupId);
+	}
+
 	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
@@ -229,6 +246,23 @@ public class AssignmentLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assignmentLocalService.getAssignment(assignmentId);
+	}
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment
+	 * @throws PortalException if a matching assignment could not be found
+	 */
+	@Override
+	public com.liferay.training.gradebook.model.Assignment
+			getAssignmentByUuidAndGroupId(String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _assignmentLocalService.getAssignmentByUuidAndGroupId(
+			uuid, groupId);
 	}
 
 	/**
@@ -289,6 +323,43 @@ public class AssignmentLocalServiceWrapper
 	}
 
 	/**
+	 * Returns all the assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @return the matching assignments, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.training.gradebook.model.Assignment>
+		getAssignmentsByUuidAndCompanyId(String uuid, long companyId) {
+
+		return _assignmentLocalService.getAssignmentsByUuidAndCompanyId(
+			uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of assignments
+	 * @param end the upper bound of the range of assignments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching assignments, or an empty list if no matches were found
+	 */
+	@Override
+	public java.util.List<com.liferay.training.gradebook.model.Assignment>
+		getAssignmentsByUuidAndCompanyId(
+			String uuid, long companyId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.training.gradebook.model.Assignment>
+					orderByComparator) {
+
+		return _assignmentLocalService.getAssignmentsByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of assignments.
 	 *
 	 * @return the number of assignments
@@ -302,6 +373,16 @@ public class AssignmentLocalServiceWrapper
 	public long getAssignmentsCountByKeywords(long groupId, String keywords) {
 		return _assignmentLocalService.getAssignmentsCountByKeywords(
 			groupId, keywords);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
+
+		return _assignmentLocalService.getExportActionableDynamicQuery(
+			portletDataContext);
 	}
 
 	@Override

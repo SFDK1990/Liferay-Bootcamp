@@ -8,4 +8,6 @@ dependencies {
 	compileOnly group: 'com.liferay', name: 'com.liferay.petra.function'
  	compileOnly group: 'com.liferay', name: 'com.liferay.frontend.taglib.clay'
  	compileOnly project(":modules:gradebook:gradebook-api")
+ 	compileOnly group: "com.liferay", name: "com.liferay.asset.api"
+    compileOnly group: "com.liferay", name: "com.liferay.asset.display.page.api"
 }

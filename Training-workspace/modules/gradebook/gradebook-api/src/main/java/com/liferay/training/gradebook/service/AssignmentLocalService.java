@@ -14,8 +14,10 @@
 
 package com.liferay.training.gradebook.service;
 
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -94,9 +96,11 @@ public interface AssignmentLocalService
 	 *
 	 * @param assignment the assignment
 	 * @return the assignment that was removed
+	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public Assignment deleteAssignment(Assignment assignment);
+	public Assignment deleteAssignment(Assignment assignment)
+		throws PortalException;
 
 	/**
 	 * Deletes the assignment with the primary key from the database. Also notifies the appropriate model listeners.
@@ -185,6 +189,17 @@ public interface AssignmentLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Assignment fetchAssignment(long assignmentId);
 
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment, or <code>null</code> if a matching assignment could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Assignment fetchAssignmentByUuidAndGroupId(
+		String uuid, long groupId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
@@ -197,6 +212,18 @@ public interface AssignmentLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Assignment getAssignment(long assignmentId) throws PortalException;
+
+	/**
+	 * Returns the assignment matching the UUID and group.
+	 *
+	 * @param uuid the assignment's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching assignment
+	 * @throws PortalException if a matching assignment could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Assignment getAssignmentByUuidAndGroupId(String uuid, long groupId)
+		throws PortalException;
 
 	/**
 	 * Returns a range of all the assignments.
@@ -230,6 +257,32 @@ public interface AssignmentLocalService
 		OrderByComparator<Assignment> orderByComparator);
 
 	/**
+	 * Returns all the assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @return the matching assignments, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentsByUuidAndCompanyId(
+		String uuid, long companyId);
+
+	/**
+	 * Returns a range of assignments matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the assignments
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of assignments
+	 * @param end the upper bound of the range of assignments (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching assignments, or an empty list if no matches were found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Assignment> getAssignmentsByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<Assignment> orderByComparator);
+
+	/**
 	 * Returns the number of assignments.
 	 *
 	 * @return the number of assignments
@@ -239,6 +292,10 @@ public interface AssignmentLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public long getAssignmentsCountByKeywords(long groupId, String keywords);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		PortletDataContext portletDataContext);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
